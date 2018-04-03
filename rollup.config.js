@@ -5,8 +5,7 @@ import json from 'rollup-plugin-json';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
-import sass from 'rollup-plugin-sass';
-import postcss from 'postcss';
+import postcss from 'rollup-plugin-postcss';
 import autoprefixer from 'autoprefixer';
 import cssnano from 'cssnano';
 import uglify from 'rollup-plugin-uglify';
@@ -16,18 +15,16 @@ import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
 
 const rollupConfig = {
-	input: './src/main.js',
+	input: 'src/main.js',
 	output: {
-		file: './dist/js/bundle.js',
+		file: 'dist/js/bundle.js',
 		format: 'cjs'
 	},
 	plugins: [
-		sass({
-			output: './dist/css/bundle.css',
-			processor: css => postcss([autoprefixer, cssnano])
-		    .process(css)
-		    .then(result => result.css)
-		}),
+      postcss({
+	      plugins: [autoprefixer, cssnano],
+	      extract: 'dist/css/bundle.css'
+      }),
 		replace({
 			exclude: 'node_modules/**',
 	      ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
